@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
-	<apikit:config outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="Router" doc:id="8919f3d1-55d8-4bb4-8af4-d4302217c0b4" name="router-config-s-gr-sfdc" api="s-gr-sfdc.raml" disableValidations="true"/>
+	<apikit:config outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="Router" doc:id="8919f3d1-55d8-4bb4-8af4-d4302217c0b4" name="s-gr-sfdc-config" api="s-gr-sfdc.raml" disableValidations="true"/>
 	<salesforce:sfdc-config name="salesforce_config" doc:name="Salesforce Config" doc:id="aa5f1fde-2f0e-453f-935b-a65158a3f4da" >
 		<salesforce:basic-connection username="${config.salesforce.username}" password="${config.salesforce.password}" securityToken="${config.salesforce.securityToken}" url="${config.salesforce.authorizationURL}" />
 	</salesforce:sfdc-config>

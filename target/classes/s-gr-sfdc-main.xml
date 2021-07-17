@@ -10,7 +10,7 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="router-config-s-gr-sfdc" />
+        <apikit:router config-ref="s-gr-sfdc-config" />
     </flow>
     <flow name="s-gr-sfdc-console">
         <http:listener path="/console/*" config-ref="http-listener-config-s-gr-sfdc">
@@ -22,7 +22,7 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:console config-ref="router-config-s-gr-sfdc" />
+        <apikit:console config-ref="s-gr-sfdc-config" />
     </flow>
     <flow name="get:\api-status:s-gr-sfdc-config" doc:id="f51c8331-6003-4dd4-ba24-58642a069e3f">
         <ee:transform doc:name="Transform Message" doc:id="aa1b51ef-3b52-4836-b9c3-2c3876ee3fa3" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
