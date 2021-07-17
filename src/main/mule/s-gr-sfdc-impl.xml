@@ -78,7 +78,7 @@ payload map (item,index) ->{
 	"Newsletter__pc" : item.Newsletter__pc,
 	"EnqueteClient__pc" : item.EnqueteClient__pc,
 	"EnvoiDeContenusAdaptes__pc" : item.EnvoiDeContenusAdaptes__pc,
-	("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.Id)),
+	//("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.Id)),
 	"DerniereSourceDeConsentement__pc": item.DerniereSourceDeConsentement__pc
 }]]></ee:set-payload>
 					</ee:message>
@@ -182,13 +182,325 @@ payload map (item, index) -> {
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
+				<ee:transform doc:name="Copy_of_Transform Message" doc:id="f1210bb7-1e44-43f8-814b-079b65e22c0a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+	"LastName": "test",
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "040134704R",
+    "Cible__c": "Fidélisation",
+    "Anciennete__c": "32",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+  	"LastName": "test1",
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "050143203L",
+    "Cible__c": "Fidélisation",
+    "Anciennete__c": "21",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Inactif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+  	"LastName": "test3",
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "070137480V",
+    "Cible__c": "Autres",
+    "Anciennete__c": "27",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+	"LastName": "test4",
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "270152616Z",
+    "Cible__c": "Fidélisation",
+    "Anciennete__c": "22",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Inactif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "300155827Y",
+    "Cible__c": "VIP",
+    "DateDEntree__c": "2004-05-13T22:00:00Z",
+    "Anciennete__c": "17",
+    "SegmentMarketing__c": "VIP",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "1"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "350143104D",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "2003-10-27T23:00:00Z",
+    "Anciennete__c": "18",
+    "SegmentMarketing__c": "Autres",
+    "StatutDuCompteClient__c": "Sorti",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "450195147Z",
+    "Cible__c": "VIP",
+    "DateDEntree__c": "2004-10-03T22:00:00Z",
+    "Anciennete__c": "17",
+    "SegmentMarketing__c": "VIP",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "1"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "470550309Y",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "2004-11-07T23:00:00Z",
+    "Anciennete__c": "17",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "420159957B",
+    "Cible__c": "Autres",
+    "DateDeSortie__c": "2003-10-12T22:00:00Z",
+    "DateDEntree__c": "1998-12-13T23:00:00Z",
+    "Anciennete__c": "23",
+    "SegmentMarketing__c": "Autres",
+    "StatutDuCompteClient__c": "Sorti",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "390128795Z",
+    "Cible__c": "Autres",
+    "DateDeSortie__c": "2021-07-06T22:00:00Z",
+    "DateDEntree__c": "1997-09-15T22:00:00Z",
+    "Anciennete__c": "24",
+    "SegmentMarketing__c": "Autres",
+    "StatutDuCompteClient__c": "Sorti",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "390133397J",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "2003-06-24T22:00:00Z",
+    "Anciennete__c": "18",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "440158388J",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "2001-07-18T22:00:00Z",
+    "Anciennete__c": "20",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "070173229Y",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "1998-10-14T22:00:00Z",
+    "Anciennete__c": "23",
+    "SegmentMarketing__c": "Autres",
+    "StatutDuCompteClient__c": "Sorti",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "140423566N",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "2003-06-24T22:00:00Z",
+    "Anciennete__c": "18",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Inactif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "150163591X",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "1996-09-15T22:00:00Z",
+    "Anciennete__c": "25",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Inactif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "150165240D",
+    "Cible__c": "VIP",
+    "DateDEntree__c": "1998-09-09T22:00:00Z",
+    "Anciennete__c": "23",
+    "SegmentMarketing__c": "VIP",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "1"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "250190363F",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "1989-10-08T23:00:00Z",
+    "Anciennete__c": "32",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "020142667C",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "2004-07-07T22:00:00Z",
+    "Anciennete__c": "17",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "5",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "050139384T",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "1996-06-29T22:00:00Z",
+    "Anciennete__c": "25",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "240194421B",
+    "Cible__c": "Fidélisation",
+    "DateDEntree__c": "2001-05-31T22:00:00Z",
+    "Anciennete__c": "20",
+    "SegmentMarketing__c": "Fidélisation",
+    "StatutDuCompteClient__c": "Inactif",
+    "MultiEquipement__c": "1",
+    "NombreDeContrats__c": "3",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "990023620U",
+    "Cible__c": "VIP",
+    "DateDEntree__c": "2008-08-04T22:00:00Z",
+    "Anciennete__c": "13",
+    "SegmentMarketing__c": "VIP",
+    "StatutDuCompteClient__c": "Actif",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "2",
+    "VersementProgrammeDe2Mois__c": "1"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "810295192D",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "1996-10-21T22:00:00Z",
+    "Anciennete__c": "25",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "220152279U",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "1989-03-23T23:00:00Z",
+    "Anciennete__c": "32",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "220162503M",
+    "Cible__c": "Autres",
+    "DateDEntree__c": "1993-09-20T22:00:00Z",
+    "Anciennete__c": "28",
+    "SegmentMarketing__c": "Rentiers",
+    "StatutDuCompteClient__c": "Rentier",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  },
+  {
+    "RecordTypeId": "0121q0000000k8xAAA",
+    "NAdherent__c": "300131706E",
+    "Cible__c": "Autres",
+    "DateDeSortie__c": "2021-07-06T22:00:00Z",
+    "DateDEntree__c": "1994-02-27T23:00:00Z",
+    "Anciennete__c": "27",
+    "SegmentMarketing__c": "Autres",
+    "StatutDuCompteClient__c": "Sorti",
+    "MultiEquipement__c": "0",
+    "NombreDeContrats__c": "1",
+    "VersementProgrammeDe2Mois__c": "0"
+  }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 			</when>
 			<otherwise >
 				<logger level="INFO" doc:name="Logger" doc:id="0cefc14a-7fb0-450e-a4be-747ac28094af" />
 			</otherwise>
 		</choice>
 <!-- 		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="5ccf7e12-6761-4e0b-b337-0dba69abe217" config-ref="Salesforce_Config" /> -->
-		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="75ba1325-9fe6-4e3b-a600-7fe55e327cf8" config-ref="Salesforce_Config"/>
+		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="75ba1325-9fe6-4e3b-a600-7fe55e327cf8" config-ref="salesforce_config"/>
 		<ee:transform doc:name="To Json" doc:id="6e520678-4ed6-4ec2-8efd-00d89e97e5d2" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -201,6 +513,7 @@ payload.items map (item,index) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="43ab87f8-3df3-41bf-9dee-1e80ed91c0b8" message="#[payload]"/>
 		<ee:transform doc:name="Set Log Configuration" doc:id="88994840-4272-45f8-bf1d-16d9d7607d03" >
 			<ee:message />
 			<ee:variables >
@@ -240,7 +553,7 @@ output application/java
 		</ee:transform>
 		<flow-ref doc:name="mule-common-logger-subflow" doc:id="795354ff-8cdf-4e00-a2e5-57a6cdc8362b" name="mule-common-logger-subflow" />
 		<set-variable value="#[attributes.queryParams.queryString]" doc:name="Query String" doc:id="e466d099-37df-48f8-a0d7-ef09f39c2296" variableName="queryString" />
-		<salesforce:query doc:name="Query" doc:id="6efc8883-b738-46d4-90b5-9b74bf9283a0" config-ref="Salesforce_Config" >
+		<salesforce:query doc:name="Query" doc:id="6efc8883-b738-46d4-90b5-9b74bf9283a0" config-ref="salesforce_config" >
 			<salesforce:salesforce-query ><![CDATA[#[vars.queryString]]]></salesforce:salesforce-query>
 		</salesforce:query>
 		<ee:transform doc:name="To Json" doc:id="9c190732-42f9-4bb1-957c-902ab7f8ff02" >
