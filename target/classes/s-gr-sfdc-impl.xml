@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
 	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 	<flow name="post:\upsertRecords:application\json:s-gr-sfdc-config" doc:id="e510d156-07e1-4229-a08b-35a2c5caa3f5" >
 		<ee:transform doc:name="Set Log Configuration" doc:id="9997c124-a487-445b-8522-3eacaabe6878" >
 			<ee:message />
@@ -29,6 +30,9 @@ output application/java
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="mule-common-logger-subflow" doc:id="ce098c0e-3377-4b88-9284-14e7ef6569cc" name="mule-common-logger-subflow" />
+		<set-variable value="#[attributes.queryParams.muleEnvironment]" doc:name="Mule Environment" doc:id="8c8e3dfa-e4b8-4bd9-a6fe-5fb6d02b565f" variableName="muleEnvironment"/>
+		<set-variable value='#[attributes.queryParams.pageNumber default "test"]' doc:name="Page Number" doc:id="24e90ffe-e480-4f2f-b8cb-94495dd66afb" variableName="pageNumber" />
+		<set-variable value="#[attributes.queryParams.objectSfdc]" doc:name="Object SFDC" doc:id="cc53e572-090d-4a26-9b53-a5b51bf472ef" variableName="objectSfdc" />
 		<choice doc:name="Choice" doc:id="5a9331bf-6df1-4759-b48d-431d3c488b51" >
 			<when expression='#[attributes.queryParams.objectSfdc == "Account" and attributes.queryParams.typeData == "RCU"]' >
 				<ee:transform doc:name="Account RCU mapping To Java" doc:id="84d542ac-fa02-46c7-9568-9d42dcf21d60" >
@@ -183,12 +187,20 @@ payload map (item, index) -> {
 		</choice>
 <!-- 		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="b85d1849-e1f7-4297-bec7-f54b6ebc9168" config-ref="Salesforce_Config" /> -->
 		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="a1ca4f0d-7b00-42f9-96dd-b0272f7f747a" config-ref="salesforce_config"/>
+		<set-variable value="#[payload]" doc:name="Payload Var" doc:id="74591a1a-7237-46ea-85a7-8affbf728ac9" variableName="payloadVar"/>
+		<choice doc:name="Choice" doc:id="83080514-362f-4e51-b94f-1330ee2c9103" >
+			<when expression="#[vars.muleEnvironment == 'prepLocal' or vars.muleEnvironment == 'devLocal']">
+				<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;[	'Page number': vars.pageNumber,&#10;	(payload.items filter (fil) -&gt; (fil.successful ~= 'false')) map (item,index) -&gt; {&#10;	exeption: item.exception.message }&#10;]]" doc:name="Set Payload" doc:id="502a95b6-a94d-4426-a23d-4f7a1b1d8281" />
+				<logger level="INFO" doc:name="Logger" doc:id="fc950186-4f02-4bbb-b71f-1ffb22cfb489" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"level": vars.logLevel,&#10;	"category": vars.logCategory,&#10;	"message": vars.logMessage&#10;}]'/>
+				<file:write doc:name="Write" doc:id="b7f916c3-b93d-4346-9684-89f2dfca71f7" path="#[vars.objectSfdc]" config-ref="File_Config" mode="APPEND"/>
+			</when>
+		</choice>
 		<ee:transform doc:name="To Json" doc:id="84892621-daf8-4c58-a03b-205ae1a962c2" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload.items map (item,index) -> {
+vars.payloadVar.items map (item,index) -> {
     "id" : item.id,
     "message" : item.message,
     "success" : item.successful
