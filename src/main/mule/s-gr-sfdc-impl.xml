@@ -100,7 +100,7 @@ payload map (item,index) ->{
 	"NContrat__c": item.NContrat__c,
 	"Account":  item.Account,
 	("Produit__c": item.Produit__c) if(!isEmpty(item.Produit__c)),
-	("Gamme_produit__c": item.Gamme_produit__c) if(!isEmpty(item.Gamme_produit__c)),
+	("GammeProduit__c ": item.GammeProduit__c) if(!isEmpty(item.GammeProduit__c)),
 	("GarantiesSouscrites__c": item.GarantiesSouscrites__c) if(!isEmpty(payload."GarantiesSouscrites__c".garantie)),
 	("Source__c": item.Source__c)  if(!isEmpty(item.Source__c)),
 	("Status": item.Status) if(!isEmpty(item.Status)),
@@ -123,7 +123,7 @@ payload map (item, index) -> {
 ("NumeroDuDocument__c": item.NumeroDuDocument__c) if(!isEmpty(item.NumeroDuDocument__c)),
 ("Montant__c ": item.Montant__c) if(!isEmpty(item.Montant__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
-("IdGed__c": item.IdGed__c as Number) if(!isEmpty(item.IdGed__c)),
+("IdGed__c": item.IdGed__c as String) if(!isEmpty(item.IdGed__c)),
 ("Status" : item.Status) if(!isEmpty(item.Status))
 }]]></ee:set-payload>
 					</ee:message>
