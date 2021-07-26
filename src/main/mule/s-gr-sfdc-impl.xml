@@ -1,83 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule
-	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
 	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
-	<flow name="post:\upsertRecords:application\json:s-gr-sfdc-config" doc:id="3d3db832-3f3a-41e7-97b0-4e249a9cf1f0" >
-		<ee:transform doc:name="Set Log Configuration" doc:id="eb1c3b60-c7b9-4503-81aa-99dfdeb59e6e" >
+	<flow name="post:\upsertRecords:application\json:s-gr-sfdc-config"
+		doc:id="3d3db832-3f3a-41e7-97b0-4e249a9cf1f0">
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="eb1c3b60-c7b9-4503-81aa-99dfdeb59e6e">
 			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
 output application/java
 ---
 'System - SFDC - Upsert Accounts - Start']]></ee:set-variable>
-				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
 output application/java
 ---
 'Trace']]></ee:set-variable>
-				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
 output application/java
 ---
 'INFO']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="mule-common-logger-subflow" doc:id="1477592f-cb41-4bb0-8c92-af6a40bca723" name="mule-common-logger-subflow" />
-		<set-variable value="#[attributes.queryParams.muleEnvironment]" doc:name="Mule Environment" doc:id="0b2639fa-4263-4865-97b1-0e5440bcf0de" variableName="muleEnvironment"/>
-		<set-variable value='#[attributes.queryParams.pageNumber default "test"]' doc:name="Page Number" doc:id="c7d47a03-0e29-499d-97a1-bd2e439a22be" variableName="pageNumber" />
-		<set-variable value="#[attributes.queryParams.objectSfdc]" doc:name="Object SFDC" doc:id="7d234be7-1a0d-4b77-9a26-af413e6c43e0" variableName="objectSfdc" />
-		<choice doc:name="Choice" doc:id="3d1ff7f0-7c56-4c89-9db9-f6d40dec6dcf" >
-			<when expression='#[attributes.queryParams.objectSfdc == "Account" and attributes.queryParams.typeData == "RCU"]' >
-				<ee:transform doc:name="Account RCU mapping To Java" doc:id="b677b61b-eb79-4acd-9e58-a1a6d0e97608" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="1477592f-cb41-4bb0-8c92-af6a40bca723"
+			name="mule-common-logger-subflow" />
+		<choice doc:name="Choice"
+			doc:id="6542eb1a-e970-4b2c-9c84-8b43a3059779">
+			<when expression="#[attributes.queryParams.mode == 'BulkAPI']">
+				<ee:transform doc:name="Api Bulk Info"
+					doc:id="f74c000a-6649-4398-ba09-f8c9102f9693">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="bulkJobInfo"><![CDATA[%dw 2.0
 output application/java
 ---
-payload map (item,index) ->{
+{
+  fastPathEnabled: payload.bulkJobInfo."fastPathEnabled",
+  numberRecordsFailed: payload.bulkJobInfo."numberRecordsFailed",
+  externalIdFieldName: payload.bulkJobInfo."externalIdFieldName",
+  //systemModstamp: item."|" ++ (item."systemModstamp" as String replace "\"" with "") ++ "|",
+  systemModstamp: payload.bulkJobInfo."systemModstamp" as LocalDateTime {format: "yyyy-MM-dd'T'HH:mm:ss"},
+  numberRetries: payload.bulkJobInfo."numberRetries",
+  apiVersion: payload.bulkJobInfo."apiVersion",
+  id: payload.bulkJobInfo."id",
+  state: payload.bulkJobInfo."state",
+  numberBatchesQueued: payload.bulkJobInfo."numberBatchesQueued",
+  totalProcessingTime: payload.bulkJobInfo."totalProcessingTime",
+  contentType: payload.bulkJobInfo."contentType",
+  createdById: payload.bulkJobInfo."createdById",
+  numberRecordsProcessed: payload.bulkJobInfo."numberRecordsProcessed",
+  apiActiveProcessingTime: payload.bulkJobInfo."apiActiveProcessingTime",
+  concurrencyMode: payload.bulkJobInfo."concurrencyMode",
+  numberBatchesFailed: payload.bulkJobInfo."numberBatchesFailed",
+  apexProcessingTime: payload.bulkJobInfo."apexProcessingTime",
+  createdDate: payload.bulkJobInfo."createdDate" as LocalDateTime {format: "yyyy-MM-dd'T'HH:mm:ss"},
+  numberBatchesInProgress: payload.bulkJobInfo."numberBatchesInProgress",
+  assignmentRuleId: payload.bulkJobInfo."assignmentRuleId",
+  operation: payload.bulkJobInfo."operation",
+  numberBatchesTotal: payload.bulkJobInfo."numberBatchesTotal",
+  object: payload.bulkJobInfo."object",
+  numberBatchesCompleted: payload.bulkJobInfo."numberBatchesCompleted"
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</when>
+		</choice>
+		<set-variable
+			value="#[attributes.queryParams.muleEnvironment]"
+			doc:name="Mule Environment"
+			doc:id="0b2639fa-4263-4865-97b1-0e5440bcf0de"
+			variableName="muleEnvironment" />
+		<set-variable
+			value='#[attributes.queryParams.pageNumber default "test"]'
+			doc:name="Page Number" doc:id="c7d47a03-0e29-499d-97a1-bd2e439a22be"
+			variableName="pageNumber" />
+		<set-variable
+			value="#[attributes.queryParams.objectSfdc]" doc:name="Object SFDC"
+			doc:id="7d234be7-1a0d-4b77-9a26-af413e6c43e0"
+			variableName="objectSfdc" />
+		<choice doc:name="Choice"
+			doc:id="3d1ff7f0-7c56-4c89-9db9-f6d40dec6dcf">
+			<when
+				expression='#[attributes.queryParams.objectSfdc == "Account" and attributes.queryParams.typeData == "RCU"]'>
+				<ee:transform doc:name="Account RCU mapping To Java"
+					doc:id="b677b61b-eb79-4acd-9e58-a1a6d0e97608">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload.payload map (item,index) ->{
 	"RecordTypeId": item.RecordTypeId,
-	("NAdherent__c" : item.NAdherent__c) if(!isEmpty(item.NAdherent__c)),
-	("Id": item.Id) if(!isEmpty(item.Id)),
-	("FirstName" : item.FirstName) if(!isEmpty(item.FirstName)),
-	("LastName" : item.LastName) if(!isEmpty(item.LastName)),
-	("Salutation" : item.Salutation) if(!isEmpty(item.Salutation)),
-	("NomDeNaissance__c": item.NomDeNaissance__c) if(!isEmpty(item.NomDeNaissance__c)),
-	("PersonBirthdate" : item.PersonBirthdate as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.PersonBirthdate)),
-	("SituationMatrimoniale__c" : item.SituationMatrimoniale__c) if(!isEmpty(item.SituationMatrimoniale__c)),
-	("NombreDEnfantsACharge__c" : item.NombreDEnfantsACharge__c) if(!isEmpty(item.NombreDEnfantsACharge__c)),
+	"NAdherent__c" : if(!isEmpty(item.NAdherent__c)) item.NAdherent__c else "",
+	"Id": if(!isEmpty(item.Id) and sizeOf(item.Id) == 18) item.Id else "",
+	"FirstName" : if(!isEmpty(item.FirstName)) item.FirstName else "",
+	"LastName" : if(!isEmpty(item.LastName)) item.LastName else "",
+	"Salutation" : if(!isEmpty(item.Salutation)) item.Salutation else "",
+	"NomDeNaissance__c": if(!isEmpty(item.NomDeNaissance__c)) item.NomDeNaissance__c else "",
+	"PersonBirthdate" : if(!isEmpty(item.PersonBirthdate)) item.PersonBirthdate as Date {format: "yyyy-MM-dd"} else "",
+	"SituationMatrimoniale__c" : if(!isEmpty(item.SituationMatrimoniale__c))  item.SituationMatrimoniale__c else "",
+	"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) item.NombreDEnfantsACharge__c else "",
 	//("TypeDeCompte__c" : item.TypeDeCompte__c) if (!isEmpty(item.TypeDeCompte__c)),
 	"TypeDeCompte__c" : 'Client',
-	("PersonHomePhone" : item.PersonHomePhone) if (!isEmpty(item.PersonHomePhone)),
-	("PersonOtherPhone" : item.PersonOtherPhone) if (!isEmpty(item.PersonOtherPhone)),
-	("PersonMobilePhone" : item.PersonMobilePhone) if (!isEmpty(item.PersonMobilePhone)),
-	("DateDeDeces__c" : item.DateDeDeces__c as Date {format: "yyyy-MM-dd"}) if (!isEmpty(item.DateDeDeces__c)),
-	("CSP__c" : item.CSP__c) if (!isEmpty(item.CSP__c)),
-	("Industry" : item.Industry) if (!isEmpty(item.Industry)),
-	("Profession__c" : item.Profession__c) if (!isEmpty(item.Profession__c)),
-	("PersonEmail" : item.PersonEmail) if (!isEmpty(item.PersonEmail)),
-	("RaisonSociale1__c" : item.RaisonSociale1__c) if (!isEmpty(item.RaisonSociale1__c)),
-	("BatimentResidenceAdresse1__c" : item.BatimentResidenceAdresse1__c) if (!isEmpty(item.BatimentResidenceAdresse1__c)),
-	("BPLieuDitAdresse1__c" : item.BPLieuDitAdresse1__c) if (!isEmpty(item.BPLieuDitAdresse1__c)),
-	("BatimentResidenceAdresse2__c" : item.BatimentResidenceAdresse2__c) if (!isEmpty(item.BatimentResidenceAdresse2__c)),
-	("RaisonSociale2__c" : item.RaisonSociale2__c) if (!isEmpty(item.RaisonSociale2__c)),
-	("BPLieuDitAdresse2__c" : item.BPLieuDitAdresse2__c),
-	("NPAIAdresse1__pc" : item.NPAIAdresse1__pc as Boolean) if(!isEmpty(item.NPAIAdresse1__pc)),
-	("NPAIAdresse2__c" : item.NPAIAdresse2__c as Boolean) if(!isEmpty(item.NPAIAdresse1__pc)),
-	("BillingCountry": item.BillingCountry) if (!isEmpty(item.BillingCountry)),
-	("BillingCity": item.BillingCity) if (!isEmpty(item.BillingCity)),
-	("BillingStreet": item.BillingStreet) if (!isEmpty(item.BillingStreet)),
-	("BillingPostalCode": item.BillingPostalCode) if (!isEmpty(item.BillingPostalCode)),
-	("ShippingCountry": item.ShippingCountry) if (!isEmpty(item.ShippingCountry)),
-	("ShippingCity": item.ShippingCity) if (!isEmpty(item.ShippingCity)),
-	("ShippingStreet": item.ShippingStreet) if (!isEmpty(item.ShippingStreet)),
-	("ShippingPostalCode": item.ShippingPostalCode) if (!isEmpty(item.ShippingPostalCode)),
-	("CodeParrain__c": item.CodeParrain__c) if(!isEmpty(item.CodeParrain__c)),
+	"PersonHomePhone" : if (!isEmpty(item.PersonHomePhone)) item.PersonHomePhone else "",
+	"PersonOtherPhone" : if (!isEmpty(item.PersonOtherPhone)) item.PersonOtherPhone else "",
+	"PersonMobilePhone" : if (!isEmpty(item.PersonMobilePhone)) item.PersonMobilePhone else "",
+	"DateDeDeces__c" : if (!isEmpty(item.DateDeDeces__c)) item.DateDeDeces__c as Date {format: "yyyy-MM-dd"} else "",
+	"CSP__c" : if (!isEmpty(item.CSP__c)) item.CSP__c else "",
+	"Industry" : if (!isEmpty(item.Industry)) item.Industry else "",
+	"Profession__c" : if (!isEmpty(item.Profession__c)) item.Profession__c else "",
+	"PersonEmail" : if (!isEmpty(item.PersonEmail)) item.PersonEmail else "",
+	"RaisonSociale1__c" : if (!isEmpty(item.RaisonSociale1__c))  item.RaisonSociale1__c else "",
+	"BatimentResidenceAdresse1__c" : if (!isEmpty(item.BatimentResidenceAdresse1__c)) item.BatimentResidenceAdresse1__c else "",
+	"BPLieuDitAdresse1__c" : if (!isEmpty(item.BPLieuDitAdresse1__c)) item.BPLieuDitAdresse1__c else "",
+	"BatimentResidenceAdresse2__c" : if (!isEmpty(item.BatimentResidenceAdresse2__c)) item.BatimentResidenceAdresse2__c else "",
+	"RaisonSociale2__c" : if (!isEmpty(item.RaisonSociale2__c)) item.RaisonSociale2__c else "",
+	"BPLieuDitAdresse2__c" : item.BPLieuDitAdresse2__c,
+	"NPAIAdresse1__pc" :  if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse1__pc as Boolean else "",
+	"NPAIAdresse2__c" : if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse2__c as Boolean else "",
+	"BillingCountry": if (!isEmpty(item.BillingCountry)) item.BillingCountry else "",
+	"BillingCity": if (!isEmpty(item.BillingCity)) item.BillingCity else "",
+	"BillingStreet": if (!isEmpty(item.BillingStreet)) item.BillingStreet else "",
+	"BillingPostalCode": if (!isEmpty(item.BillingPostalCode)) item.BillingPostalCode else "",
+	"ShippingCountry": if (!isEmpty(item.ShippingCountry)) item.ShippingCountry else "",
+	"ShippingCity": if (!isEmpty(item.ShippingCity)) item.ShippingCity else "",
+	"ShippingStreet": if (!isEmpty(item.ShippingStreet)) item.ShippingStreet else "",
+	"ShippingPostalCode": if (!isEmpty(item.ShippingPostalCode)) item.ShippingPostalCode else "",
+	"CodeParrain__c": if(!isEmpty(item.CodeParrain__c)) item.CodeParrain__c else "",
 	"PrCommercialesInfosServicesProduits__pc" : item.PrCommercialesInfosServicesProduits__pc,
 	"Newsletter__pc" : item.Newsletter__pc,
 	"EnqueteClient__pc" : item.EnqueteClient__pc,
@@ -87,11 +146,22 @@ payload map (item,index) ->{
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
+				<ee:transform doc:name="To CSV"
+					doc:id="613069da-1fe3-460f-b46f-c229ec2c07fe">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv separator='|', quoteValues=true, escape=''
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
 			</when>
-			<when expression='#[attributes.queryParams.objectSfdc == "Contract"]' >
-				<ee:transform doc:name="Contract mapping to Java" doc:id="fcabbfcb-c6bf-4e6e-861c-fb0b50c2fba0" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
+			<when
+				expression='#[attributes.queryParams.objectSfdc == "Contract"]'>
+				<ee:transform doc:name="Contract mapping to Java"
+					doc:id="fcabbfcb-c6bf-4e6e-861c-fb0b50c2fba0">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
 
@@ -111,10 +181,12 @@ payload map (item,index) ->{
 					</ee:message>
 				</ee:transform>
 			</when>
-			<when expression='#[attributes.queryParams.objectSfdc == "Task"]' >
-				<ee:transform doc:name="Task mapping to Java" doc:id="96248981-60cc-4615-8744-2504eb5c5c40" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
+			<when
+				expression='#[attributes.queryParams.objectSfdc == "Task"]'>
+				<ee:transform doc:name="Task mapping to Java"
+					doc:id="96248981-60cc-4615-8744-2504eb5c5c40">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
 payload map (item, index) -> {
@@ -129,10 +201,12 @@ payload map (item, index) -> {
 					</ee:message>
 				</ee:transform>
 			</when>
-			<when expression='#[attributes.queryParams.objectSfdc == "Case"]' >
-				<ee:transform doc:name="Case mapping to Java" doc:id="943b333c-6950-4741-b28e-bc0ea594e985" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
+			<when
+				expression='#[attributes.queryParams.objectSfdc == "Case"]'>
+				<ee:transform doc:name="Case mapping to Java"
+					doc:id="943b333c-6950-4741-b28e-bc0ea594e985">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
 payload map (item, index) -> {
@@ -152,10 +226,13 @@ payload map (item, index) -> {
 					</ee:message>
 				</ee:transform>
 			</when>
-			<when expression='#[attributes.queryParams.objectSfdc == "Account" and attributes.queryParams.typeData == "Marketing"]' >
-				<ee:transform doc:name="Account Marketing mapping to Java" doc:id="a2865692-5e5d-4a63-a2c9-dbe7374b6c45" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
+			<when
+				expression='#[attributes.queryParams.objectSfdc == "Account" and attributes.queryParams.typeData == "Marketing"]'>
+				<ee:transform
+					doc:name="Account Marketing mapping to Java"
+					doc:id="a2865692-5e5d-4a63-a2c9-dbe7374b6c45">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
 payload map (item, index) -> {
@@ -181,36 +258,68 @@ payload map (item, index) -> {
 					</ee:message>
 				</ee:transform>
 			</when>
-			<otherwise >
-				<logger level="INFO" doc:name="Logger" doc:id="86b7678f-2e81-42f0-bd36-8e6fba5d625d" />
+			<otherwise>
+				<logger level="INFO" doc:name="Logger"
+					doc:id="86b7678f-2e81-42f0-bd36-8e6fba5d625d" />
 			</otherwise>
 		</choice>
-<!-- 		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="8cac568f-e8a2-406c-a2c2-cd9c3e607099" config-ref="Salesforce_Config" /> -->
-		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="30f13614-78e7-4a56-a59f-3d0537c84bda" config-ref="salesforce_config"/>
-		<set-variable value="#[payload]" doc:name="Payload Var" doc:id="edb603ff-6711-413e-840c-d42ff56c201d" variableName="payloadVar"/>
-		<choice doc:name="Choice" doc:id="710fe44e-b069-4c7c-9bf6-82baf94297a1" >
-			<when expression="#[vars.muleEnvironment == 'prepLocal' or vars.muleEnvironment == 'devLocal']">
-				<set-payload value="#[%dw 2.0
+		<!-- <salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" 
+			externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" 
+			doc:id="8cac568f-e8a2-406c-a2c2-cd9c3e607099" config-ref="Salesforce_Config" 
+			/> -->
+		<choice doc:name="Choice"
+			doc:id="65d03475-be90-46ba-8636-08d9087cd76c">
+			<when
+				expression="#[attributes.queryParams.objectSfdc == 'Account']">
+				<salesforce:create-batch
+					doc:name="Create batch"
+					doc:id="f1df084c-c765-4777-9b08-937581ae9b37"
+					config-ref="salesforce_config" jobInfoBatch="#[vars.bulkJobInfo]" />
+			</when>
+			<otherwise>
+				<salesforce:upsert
+					objectType="#[attributes.queryParams.objectSfdc]"
+					externalIdFieldName="#[attributes.queryParams.externalIdField]"
+					doc:name="Upsert" doc:id="30f13614-78e7-4a56-a59f-3d0537c84bda"
+					config-ref="salesforce_config" />
+			</otherwise>
+		</choice>
+		<set-variable value="#[payload]" doc:name="Payload Var"
+			doc:id="edb603ff-6711-413e-840c-d42ff56c201d"
+			variableName="payloadVar" />
+		<choice doc:name="Choice"
+			doc:id="710fe44e-b069-4c7c-9bf6-82baf94297a1">
+			<when
+				expression="#[vars.muleEnvironment == 'prepLocal' or vars.muleEnvironment == 'devLocal']">
+				<set-payload
+					value="#[%dw 2.0
 &#10;output application/json
 &#10;---
 &#10;[	'Page number': vars.pageNumber,
 &#10;	(payload.items filter (fil) -&gt; (fil.successful ~= 'false')) map (item,index) -&gt; {
 &#10;	exeption: item.exception.message }
-&#10;]]" doc:name="Set Payload" doc:id="46fba6d7-e5bb-44f4-97f9-427be3028639" />
-				<logger level="INFO" doc:name="Logger" doc:id="cea78529-1816-443d-9669-0247a7e5962c" message='#[%dw 2.0
+&#10;]]"
+					doc:name="Set Payload"
+					doc:id="46fba6d7-e5bb-44f4-97f9-427be3028639" />
+				<logger level="INFO" doc:name="Logger"
+					doc:id="cea78529-1816-443d-9669-0247a7e5962c"
+					message='#[%dw 2.0
 &#10;output application/json
 &#10;---
 &#10;{
 &#10;	"level": vars.logLevel,
 &#10;	"category": vars.logCategory,
 &#10;	"message": vars.logMessage
-&#10;}]'/>
-				<file:write doc:name="Write" doc:id="5f19c9bc-ca7e-4d0a-9b2c-34a11f949643" path="#[vars.objectSfdc]" config-ref="File_Config" mode="APPEND"/>
+&#10;}]' />
+				<file:write doc:name="Write"
+					doc:id="5f19c9bc-ca7e-4d0a-9b2c-34a11f949643"
+					path="#[vars.objectSfdc]" config-ref="File_Config" mode="APPEND" />
 			</when>
 		</choice>
-		<ee:transform doc:name="To Json" doc:id="027bdb7f-20b0-4293-b98d-da90aa03b4d4" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+		<ee:transform doc:name="To Json"
+			doc:id="027bdb7f-20b0-4293-b98d-da90aa03b4d4">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 vars.payloadVar.items map (item,index) -> {
@@ -220,75 +329,116 @@ vars.payloadVar.items map (item,index) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="58a66232-9ad4-487d-9db2-91539e8b8b49" message="#[payload]"/>
-		<ee:transform doc:name="Set Log Configuration" doc:id="b43e9a14-bb00-4841-bb64-30c670a206cd" >
+		<logger level="INFO" doc:name="Logger"
+			doc:id="58a66232-9ad4-487d-9db2-91539e8b8b49" message="#[payload]" />
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="b43e9a14-bb00-4841-bb64-30c670a206cd">
 			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
 output application/java
 ---
 'System - SFDC - Upsert Accounts - Finish']]></ee:set-variable>
-				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
 output application/java
 ---
 'Trace']]></ee:set-variable>
-				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
 output application/java
 ---
 'INFO']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="mule-common-logger-subflow" doc:id="8e494553-c766-47a8-8857-ba85a1f8b13d" name="mule-common-logger-subflow" />
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="8e494553-c766-47a8-8857-ba85a1f8b13d"
+			name="mule-common-logger-subflow" />
 	</flow>
-	<flow name="get:\getRecord:s-gr-sfdc-config" doc:id="ea82c861-cc20-4407-befd-9075f7cb1300" >
-		<ee:transform doc:name="Set Log Configuration" doc:id="d7ec6bc6-eb3e-4f41-8472-315b793c28e3" >
+	<flow name="get:\getRecord:s-gr-sfdc-config"
+		doc:id="ea82c861-cc20-4407-befd-9075f7cb1300">
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="d7ec6bc6-eb3e-4f41-8472-315b793c28e3">
 			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
 output application/java
 ---
 'System - SFDC - Get Single Record - Start']]></ee:set-variable>
-				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
 output application/java
 ---
 'Trace']]></ee:set-variable>
-				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
 output application/java
 ---
 'INFO']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="mule-common-logger-subflow" doc:id="01f463e7-26cc-436e-9a75-48d3acf045a2" name="mule-common-logger-subflow" />
-		<set-variable value="#[attributes.queryParams.queryString]" doc:name="Query String" doc:id="be69d40a-cc1a-48b1-b2f9-bd133b22241c" variableName="queryString" />
-		<salesforce:query doc:name="Query" doc:id="d97f7cc0-0a2d-46f0-bce5-a5d0eaa98ce2" config-ref="salesforce_config" >
-			<salesforce:salesforce-query ><![CDATA[#[vars.queryString]]]></salesforce:salesforce-query>
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="01f463e7-26cc-436e-9a75-48d3acf045a2"
+			name="mule-common-logger-subflow" />
+		<set-variable
+			value="#[attributes.queryParams.queryString]" doc:name="Query String"
+			doc:id="be69d40a-cc1a-48b1-b2f9-bd133b22241c"
+			variableName="queryString" />
+		<salesforce:query doc:name="Query"
+			doc:id="d97f7cc0-0a2d-46f0-bce5-a5d0eaa98ce2"
+			config-ref="salesforce_config">
+			<salesforce:salesforce-query><![CDATA[#[vars.queryString]]]></salesforce:salesforce-query>
 		</salesforce:query>
-		<ee:transform doc:name="To Json" doc:id="105803e4-63f8-4728-9ec4-d938552afc66" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+		<ee:transform doc:name="To Json"
+			doc:id="105803e4-63f8-4728-9ec4-d938552afc66">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<ee:transform doc:name="Set Log Configuration" doc:id="4d281a4e-2b5c-4513-8890-8ca6c79f6d2e" >
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="4d281a4e-2b5c-4513-8890-8ca6c79f6d2e">
 			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
 output application/java
 ---
 'System - SFDC - Get Single Record - Finish']]></ee:set-variable>
-				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
 output application/java
 ---
 'Trace']]></ee:set-variable>
-				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
 output application/java
 ---
 'INFO']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="mule-common-logger-subflow" doc:id="d8c44b73-5af3-4b67-a55d-eb7bedb2875b" name="mule-common-logger-subflow" />
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="d8c44b73-5af3-4b67-a55d-eb7bedb2875b"
+			name="mule-common-logger-subflow" />
 	</flow>
-
+	<flow name="get:\createBulkJob:s-gr-sfdc-config">
+		<salesforce:create-job operation="upsert" type="#[attributes.queryParams.objectSfdc]" doc:name="Create job" doc:id="ba84b44f-9f1e-42b1-ae1b-37c910d80cf1" config-ref="salesforce_config">
+			<salesforce:create-job-request><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+    "externalIdFieldName": attributes.queryParams.externalIdField,
+    "contentType" : "CSV",
+    "concurrencyMode": "Serial"  //Serial or Parallel
+}]]]></salesforce:create-job-request>
+		</salesforce:create-job>
+		<ee:transform doc:name="To JSON" doc:id="f9abfe6e-2906-46ea-b209-c2a9a7c6be64">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" message="#[payload]" />
+	</flow>
+	<flow name="get:\closeJob:s-gr-sfdc-config">
+		<salesforce:close-job doc:name="Close job" doc:id="3f25da1b-96b7-466c-b104-d4fdddf79f7b" config-ref="salesforce_config" jobId="#[attributes.queryParams.jobId]"/>
+		<logger level="INFO" message="get:\closeJob:s-gr-sfdc-config" />
+	</flow>
 </mule>

@@ -30,7 +30,23 @@ traits:
         getResponseExamples:
           Response example 1: !include examples/Account/Single-Account.raml
         getResponseType: dtaccount.SingleAccount
-        
+
+/createBulkJob:
+  is: [client-id-secret-required] 
+  type: 
+    rt.read-only-resource-type:
+      getResponseExamples: 
+        Response example 1: !include examples/Job Info/JobInfo.raml
+      getResponseType:
+      
+/closeJob:
+  is: [client-id-secret-required] 
+  type: 
+    rt.read-only-resource-type:
+      getResponseExamples: 
+        Response example 1: !include examples/Job Info/JobInfo.raml
+      getResponseType:
+
 /api-status:
   is: [client-id-secret-required] 
   type: 
