@@ -4,11 +4,12 @@ environment:
   
 api:
   name: "${application.name}-${environment.name}"
-  //id: "329996"
+  id: "795526"
   version: "v1"
 
 http:
-  port: "8083"
+  private:
+    port: "8083"
   timeout: "999999999"
   listener:
     path: "/api/${api.name}/${api.version}/*"
@@ -20,9 +21,12 @@ https:
 config:
   salesforce:
     authorizationURL: "https://test.salesforce.com/services/Soap/u/50.0"
-    username: "mulesoft.api@garance.fr.lot1real"
+    //username: "mulesoft.api@garance.fr.lot1real"
+    //password: "${secure::passwords.sfdcPass}"
+    //securityToken: "tKO7vwAyJhyB2QRzU4VOmaQKy"
+    username: "mulesoft.api@garance.fr.recette"
     password: "${secure::passwords.sfdcPass}"
-    securityToken: "tKO7vwAyJhyB2QRzU4VOmaQKy"
+    securityToken: "4NHYgGPP2eCmNbVDiU9obI1u"
     timeout: "900000000"
     
 # Common properties
