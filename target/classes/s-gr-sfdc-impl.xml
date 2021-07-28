@@ -57,6 +57,7 @@ output application/java
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
+
 payload.payload map (item,index) ->{
 "RecordTypeId": item.RecordTypeId,
 ("NAdherent__c" : item.NAdherent__c) if(!isEmpty(item.NAdherent__c)),
@@ -98,7 +99,7 @@ payload.payload map (item,index) ->{
 "Newsletter__pc" : item.Newsletter__pc,
 "EnqueteClient__pc" : item.EnqueteClient__pc,
 "EnvoiDeContenusAdaptes__pc" : item.EnvoiDeContenusAdaptes__pc,
-("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc) if(!isEmpty(item.DateDuDernierConsentement__pc)),
+("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc as LocalDateTime) if(!isEmpty(item.DateDuDernierConsentement__pc)),
 ("DerniereSourceDeConsentement__pc": item.DerniereSourceDeConsentement__pc) if(!isEmpty(item.DerniereSourceDeConsentement__pc))
 }]]></ee:set-payload>
 					</ee:message>
@@ -219,7 +220,7 @@ payload map (item, index) -> {
 			objectType="#[attributes.queryParams.objectSfdc]"
 			externalIdFieldName="#[attributes.queryParams.externalIdField]"
 			doc:name="Upsert" doc:id="b20785d4-8001-4bae-85ce-2cb3a12c00f5"
-			config-ref="salesforce_config" />
+			config-ref="salesforce_config"/>
 		<set-variable value="#[payload]" doc:name="Payload Var"
 			doc:id="4241602e-9c99-40d8-85dd-f2e152b672bd"
 			variableName="payloadVar" />
