@@ -57,50 +57,50 @@ output application/java
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
+
 payload.payload map (item,index) ->{
-	"RecordTypeId": item.RecordTypeId,
-	"NAdherent__c" : if(!isEmpty(item.NAdherent__c)) item.NAdherent__c else "",
-	"Id": if(!isEmpty(item.Id) and sizeOf(item.Id) == 18) item.Id else "",
-	"FirstName" : if(!isEmpty(item.FirstName)) item.FirstName else "",
-	"LastName" : if(!isEmpty(item.LastName)) item.LastName else "",
-	"Salutation" : if(!isEmpty(item.Salutation)) item.Salutation else "",
-	"NomDeNaissance__c": if(!isEmpty(item.NomDeNaissance__c)) item.NomDeNaissance__c else "",
-	"PersonBirthdate" : if(!isEmpty(item.PersonBirthdate)) item.PersonBirthdate as Date {format: "yyyy-MM-dd"} else "",
-	"SituationMatrimoniale__c" : if(!isEmpty(item.SituationMatrimoniale__c))  item.SituationMatrimoniale__c else "",
-	"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) item.NombreDEnfantsACharge__c else "",
-	//("TypeDeCompte__c" : item.TypeDeCompte__c) if (!isEmpty(item.TypeDeCompte__c)),
-	"TypeDeCompte__c" : 'Client',
-	"PersonHomePhone" : if (!isEmpty(item.PersonHomePhone)) item.PersonHomePhone else "",
-	"PersonOtherPhone" : if (!isEmpty(item.PersonOtherPhone)) item.PersonOtherPhone else "",
-	"PersonMobilePhone" : if (!isEmpty(item.PersonMobilePhone)) item.PersonMobilePhone else "",
-	"DateDeDeces__c" : if (!isEmpty(item.DateDeDeces__c)) item.DateDeDeces__c as Date {format: "yyyy-MM-dd"} else "",
-	"CSP__c" : if (!isEmpty(item.CSP__c)) item.CSP__c else "",
-	"Industry" : if (!isEmpty(item.Industry)) item.Industry else "",
-	"Profession__c" : if (!isEmpty(item.Profession__c)) item.Profession__c else "",
-	"PersonEmail" : if (!isEmpty(item.PersonEmail)) item.PersonEmail else "",
-	"RaisonSociale1__c" : if (!isEmpty(item.RaisonSociale1__c))  item.RaisonSociale1__c else "",
-	"BatimentResidenceAdresse1__c" : if (!isEmpty(item.BatimentResidenceAdresse1__c)) item.BatimentResidenceAdresse1__c else "",
-	"BPLieuDitAdresse1__c" : if (!isEmpty(item.BPLieuDitAdresse1__c)) item.BPLieuDitAdresse1__c else "",
-	"BatimentResidenceAdresse2__c" : if (!isEmpty(item.BatimentResidenceAdresse2__c)) item.BatimentResidenceAdresse2__c else "",
-	"RaisonSociale2__c" : if (!isEmpty(item.RaisonSociale2__c)) item.RaisonSociale2__c else "",
-	"BPLieuDitAdresse2__c" : item.BPLieuDitAdresse2__c,
-	"NPAIAdresse1__pc" :  if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse1__pc as Boolean else "",
-	"NPAIAdresse2__c" : if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse2__c as Boolean else "",
-	"BillingCountry": if (!isEmpty(item.BillingCountry)) item.BillingCountry else "",
-	"BillingCity": if (!isEmpty(item.BillingCity)) item.BillingCity else "",
-	"BillingStreet": if (!isEmpty(item.BillingStreet)) item.BillingStreet else "",
-	"BillingPostalCode": if (!isEmpty(item.BillingPostalCode)) item.BillingPostalCode else "",
-	"ShippingCountry": if (!isEmpty(item.ShippingCountry)) item.ShippingCountry else "",
-	"ShippingCity": if (!isEmpty(item.ShippingCity)) item.ShippingCity else "",
-	"ShippingStreet": if (!isEmpty(item.ShippingStreet)) item.ShippingStreet else "",
-	"ShippingPostalCode": if (!isEmpty(item.ShippingPostalCode)) item.ShippingPostalCode else "",
-	"CodeParrain__c": if(!isEmpty(item.CodeParrain__c)) item.CodeParrain__c else "",
-	"PrCommercialesInfosServicesProduits__pc" : item.PrCommercialesInfosServicesProduits__pc,
-	"Newsletter__pc" : item.Newsletter__pc,
-	"EnqueteClient__pc" : item.EnqueteClient__pc,
-	"EnvoiDeContenusAdaptes__pc" : item.EnvoiDeContenusAdaptes__pc,
-	"DateDuDernierConsentement__pc": if(!isEmpty(item.DateDuDernierConsentement__pc)) item.DateDuDernierConsentement__pc else "",
-	"DerniereSourceDeConsentement__pc": item.DerniereSourceDeConsentement__pc
+"RecordTypeId": item.RecordTypeId,
+("NAdherent__c" : item.NAdherent__c) if(!isEmpty(item.NAdherent__c)),
+("Id": item.Id) if(!isEmpty(item.Id)),
+"FirstName" : if(!isEmpty(item.FirstName)) item.FirstName else "",
+"LastName" : if(!isEmpty(item.LastName)) item.LastName else "",
+"Salutation" : if(!isEmpty(item.Salutation)) item.Salutation else "",
+"NomDeNaissance__c": if(!isEmpty(item.NomDeNaissance__c)) item.NomDeNaissance__c else "",
+"PersonBirthdate" : if(!isEmpty(item.PersonBirthdate)) item.PersonBirthdate as Date {format: "yyyy-MM-dd"} else "",
+"SituationMatrimoniale__c" : if(!isEmpty(item.SituationMatrimoniale__c)) item.SituationMatrimoniale__c else "",
+"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) item.NombreDEnfantsACharge__c else "",
+"TypeDeCompte__c" : item.TypeDeCompte__c,
+"PersonHomePhone" : if (!isEmpty(item.PersonHomePhone)) item.PersonHomePhone else "",
+"PersonOtherPhone" : if (!isEmpty(item.PersonOtherPhone)) item.PersonOtherPhone else "",
+"PersonMobilePhone" : if (!isEmpty(item.PersonMobilePhone)) item.PersonMobilePhone else "",
+"DateDeDeces__c" : if (!isEmpty(item.DateDeDeces__c)) item.DateDeDeces__c as Date {format: "yyyy-MM-dd"} else "",
+"CSP__c" : if (!isEmpty(item.CSP__c)) item.CSP__c else "",
+"Industry" : if (!isEmpty(item.Industry)) item.Industry else "",
+"Profession__c" : if (!isEmpty(item.Profession__c)) item.Profession__c else "",
+"PersonEmail" : if (!isEmpty(item.PersonEmail)) item.PersonEmail else "",
+"RaisonSociale1__c" : if (!isEmpty(item.RaisonSociale1__c)) item.RaisonSociale1__c else "",
+"BatimentResidenceAdresse1__c" : if (!isEmpty(item.BatimentResidenceAdresse1__c)) item.BatimentResidenceAdresse1__c else "",
+"BPLieuDitAdresse1__c" : if (!isEmpty(item.BPLieuDitAdresse1__c)) item.BPLieuDitAdresse1__c else "",
+"BatimentResidenceAdresse2__c" : if (!isEmpty(item.BatimentResidenceAdresse2__c)) item.BatimentResidenceAdresse2__c else "",
+"RaisonSociale2__c" : if (!isEmpty(item.RaisonSociale2__c)) item.RaisonSociale2__c else "",
+"BPLieuDitAdresse2__c" : item.BPLieuDitAdresse2__c,
+"NPAIAdresse1__pc" : if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse1__pc as Boolean else "",
+"NPAIAdresse2__c" : if(!isEmpty(item.NPAIAdresse1__pc)) item.NPAIAdresse2__c as Boolean else "",
+"BillingCountry": if (!isEmpty(item.BillingCountry)) item.BillingCountry else "",
+"BillingCity": if (!isEmpty(item.BillingCity)) item.BillingCity else "",
+"BillingStreet": if (!isEmpty(item.BillingStreet)) item.BillingStreet else "",
+"BillingPostalCode": if (!isEmpty(item.BillingPostalCode)) item.BillingPostalCode else "",
+"ShippingCountry": if (!isEmpty(item.ShippingCountry)) item.ShippingCountry else "",
+"ShippingCity": if (!isEmpty(item.ShippingCity)) item.ShippingCity else "",
+"ShippingStreet": if (!isEmpty(item.ShippingStreet)) item.ShippingStreet else "",
+"ShippingPostalCode": if (!isEmpty(item.ShippingPostalCode)) item.ShippingPostalCode else "",
+"CodeParrain__c": if(!isEmpty(item.CodeParrain__c)) item.CodeParrain__c else "",
+"PrCommercialesInfosServicesProduits__pc" : item.PrCommercialesInfosServicesProduits__pc,
+"Newsletter__pc" : item.Newsletter__pc,
+"EnqueteClient__pc" : item.EnqueteClient__pc,
+"EnvoiDeContenusAdaptes__pc" : item.EnvoiDeContenusAdaptes__pc,
+("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc as LocalDateTime) if(!isEmpty(item.DateDuDernierConsentement__pc)),
+("DerniereSourceDeConsentement__pc": item.DerniereSourceDeConsentement__pc) if(!isEmpty(item.DerniereSourceDeConsentement__pc))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -144,7 +144,7 @@ payload map (item, index) -> {
 ("NumeroDuDocument__c": item.NumeroDuDocument__c) if(!isEmpty(item.NumeroDuDocument__c)),
 ("Montant__c ": item.Montant__c) if(!isEmpty(item.Montant__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
-("IdGed__c": item.IdGed__c as String) if(!isEmpty(item.IdGed__c)),
+("IDPLI__c": item.IDPLI__c as String) if(!isEmpty(item.IDPLI__c)),
 ("Status" : item.Status) if(!isEmpty(item.Status))
 }]]></ee:set-payload>
 					</ee:message>
@@ -216,7 +216,11 @@ payload map (item, index) -> {
 			externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" 
 			doc:id="4d3c38e6-be43-42e8-a4c0-b1d60eed96bd" config-ref="Salesforce_Config" 
 			/> -->
-		<salesforce:upsert objectType="#[attributes.queryParams.objectSfdc]" externalIdFieldName="#[attributes.queryParams.externalIdField]" doc:name="Upsert" doc:id="b20785d4-8001-4bae-85ce-2cb3a12c00f5" config-ref="salesforce_config" />
+		<salesforce:upsert
+			objectType="#[attributes.queryParams.objectSfdc]"
+			externalIdFieldName="#[attributes.queryParams.externalIdField]"
+			doc:name="Upsert" doc:id="b20785d4-8001-4bae-85ce-2cb3a12c00f5"
+			config-ref="salesforce_config"/>
 		<set-variable value="#[payload]" doc:name="Payload Var"
 			doc:id="4241602e-9c99-40d8-85dd-f2e152b672bd"
 			variableName="payloadVar" />
@@ -348,7 +352,10 @@ output application/java
 			name="mule-common-logger-subflow" />
 	</flow>
 	<flow name="get:\createBulkJob:s-gr-sfdc-config">
-		<salesforce:create-job operation="upsert" type="#[attributes.queryParams.objectSfdc]" doc:name="Create job" doc:id="c3e086e7-926c-4756-9789-c56aabca9126" config-ref="salesforce_config">
+		<salesforce:create-job operation="upsert"
+			type="#[attributes.queryParams.objectSfdc]" doc:name="Create job"
+			doc:id="c3e086e7-926c-4756-9789-c56aabca9126"
+			config-ref="salesforce_config">
 			<salesforce:create-job-request><![CDATA[#[%dw 2.0
 output application/java
 ---
@@ -358,7 +365,8 @@ output application/java
     "concurrencyMode": "Serial"  //Serial or Parallel,
 }]]]></salesforce:create-job-request>
 		</salesforce:create-job>
-		<ee:transform doc:name="To JSON" doc:id="aec9de55-76d1-4a84-9243-d1190c46e08d">
+		<ee:transform doc:name="To JSON"
+			doc:id="aec9de55-76d1-4a84-9243-d1190c46e08d">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -369,7 +377,10 @@ payload]]></ee:set-payload>
 		<logger level="INFO" message="#[payload]" />
 	</flow>
 	<flow name="get:\closeJob:s-gr-sfdc-config">
-		<salesforce:close-job doc:name="Close job" doc:id="7b2890b3-d0e0-41f4-8360-db1d62fc4a6a" config-ref="salesforce_config" jobId="#[attributes.queryParams.jobId]"/>
+		<salesforce:close-job doc:name="Close job"
+			doc:id="7b2890b3-d0e0-41f4-8360-db1d62fc4a6a"
+			config-ref="salesforce_config"
+			jobId="#[attributes.queryParams.jobId]" />
 		<logger level="INFO" message="get:\closeJob:s-gr-sfdc-config" />
 	</flow>
 </mule>
