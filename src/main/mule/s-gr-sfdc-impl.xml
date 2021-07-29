@@ -144,7 +144,7 @@ payload map (item, index) -> {
 ("NumeroDuDocument__c": item.NumeroDuDocument__c) if(!isEmpty(item.NumeroDuDocument__c)),
 ("Montant__c ": item.Montant__c) if(!isEmpty(item.Montant__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
-("IdGed__c": item.IdGed__c as String) if(!isEmpty(item.IdGed__c)),
+("IDPLI__c": item.IDPLI__c as String) if(!isEmpty(item.IDPLI__c)),
 ("Status" : item.Status) if(!isEmpty(item.Status))
 }]]></ee:set-payload>
 					</ee:message>

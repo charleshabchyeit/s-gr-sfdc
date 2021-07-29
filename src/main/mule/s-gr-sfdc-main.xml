@@ -12,7 +12,7 @@
         </http:listener>
         <apikit:router config-ref="s-gr-sfdc-config" />
     </flow>
-    <flow name="s-gr-sfdc-console">
+	<flow name="s-gr-sfdc-console">
         <http:listener path="/console/*" config-ref="http-listener-config-s-gr-sfdc">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
