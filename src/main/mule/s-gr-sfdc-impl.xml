@@ -169,7 +169,7 @@ payload map (item, index) -> {
 ("Reason": item.Reason) if(!isEmpty(item.Reason)),
 //("SousMotif__c": item.SousMotif__c) if(!isEmpty(item.SousMotif__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
-//(Status: item.Status) if (!isEmpty(item.Status)),
+(Status: item.Status) if (!isEmpty(item.Status))
 //("ReferenceEncaissement__c": item.ReferenceEncaissement__c) if(!isEmpty(item.ReferenceEncaissement__c))
 }]]></ee:set-payload>
 					</ee:message>
