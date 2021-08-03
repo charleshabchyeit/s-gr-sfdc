@@ -166,7 +166,7 @@ payload map (item, index) -> {
 ("MontantEncaissement__c ": item.MontantEncaissement__c) if(!isEmpty(item.MontantEncaissement__c)),
 ("Origin": item.Origin) if(!isEmpty(item.Origin)),
 ("Reason": item.Reason) if(!isEmpty(item.Reason)),
-//("SousMotif__c": item.SousMotif__c) if(!isEmpty(item.SousMotif__c)),
+("SousMotif__c": item.SousMotif__c) if(!isEmpty(item.SousMotif__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
 (Status: item.Status) if (!isEmpty(item.Status)),
 ("ReferenceEncaissement__c": item.ReferenceEncaissement__c) if(!isEmpty(item.ReferenceEncaissement__c))
