@@ -120,12 +120,12 @@ payload map (item,index) ->{
 	"Account":  item.Account,
 	("Produit__c": item.Produit__c) if(!isEmpty(item.Produit__c)),
 	("GammeProduit__c ": item.GammeProduit__c) if(!isEmpty(item.GammeProduit__c)),
-	("GarantiesSouscrites__c": item.GarantiesSouscrites__c) if(!isEmpty(payload."GarantiesSouscrites__c".garantie)),
+	("GarantiesSouscrites__c": item.GarantiesSouscrites__c) if(!isEmpty(item.GarantiesSouscrites__c)),
 	("Source__c": item.Source__c)  if(!isEmpty(item.Source__c)),
 	("Status": item.Status) if(!isEmpty(item.Status)),
-	//"StartDate": item.dateDeDebut as Date {format: "yyyy-MM-dd"},
 	("DateDeffet__c": item.DateDeffet__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeffet__c)),
-	("DateDeFinDuContrat__c": item.DateDeFinDuContrat__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeFinDuContrat__c))
+	("DateDeFinDuContrat__c": item.DateDeFinDuContrat__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeFinDuContrat__c)),
+	("StartDate": item.StartDate as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.StartDate))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -247,9 +247,7 @@ payload map (item, index) -> {
 &#10;	"category": vars.logCategory,
 &#10;	"message": vars.logMessage
 &#10;}]' />
-				<file:write doc:name="Write"
-					doc:id="023edc04-677a-4672-a89d-7465295735dd"
-					path="#[vars.objectSfdc]" config-ref="File_Config" mode="APPEND" />
+				<file:write doc:name="Write" doc:id="7dac78b4-80c7-4d9d-a835-89e4dedef5c4" config-ref="File_Config" path="#[vars.objectSfdc]" mode="APPEND" />
 			</when>
 		</choice>
 		<ee:transform doc:name="To Json"
