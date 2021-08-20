@@ -81,7 +81,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<file:config name="File_Config" doc:name="File Config"
 		doc:id="836c24bc-ba74-4ba9-83dd-cc477c719f01">
 		<file:connection
-			workingDir="C:\Users\charles.habchy.EITECH\Desktop\GRLogs" />
+			workingDir="C:\Users\nancy.kalach\Desktop\GRLogs" />
 	</file:config>
 <!-- 	<api-gateway:autodiscovery apiId="${api.id}" -->
 <!-- 		ignoreBasePath="true" doc:name="API Autodiscovery" -->
