@@ -45,9 +45,9 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<import doc:name="Import"
 		doc:id="22838dae-af39-40ed-8954-022a103bd2b4"
 		file="common/error/global-error.xml" />
-	<global-property doc:name="Global Property"
+	<global-property doc:name="mule.env"
 		doc:id="96f71df1-6c02-4c6f-8889-5394cdf44964" name="mule.env"
-		value="devLocal" />
+		value="testLocal" />
 	<configuration-properties
 		doc:name="Configuration properties"
 		doc:id="c0bc5f27-1daf-482d-bac4-ccf6e7e19f50"

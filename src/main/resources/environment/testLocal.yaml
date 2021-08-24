@@ -9,13 +9,12 @@ api:
 
 http:
   private:
-    port: "8091"
+    port: "8083"
   timeout: "999999999"
   listener:
     path: "/api/${api.name}/${api.version}/*"
 
 https:
-  port: "8092"
   listener:
     path: "/api/${api.name}/${api.version}/*"
 
