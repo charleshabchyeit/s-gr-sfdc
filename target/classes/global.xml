@@ -29,6 +29,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 			password="${config.salesforce.password}"
 			securityToken="${config.salesforce.securityToken}"
 			url="${config.salesforce.authorizationURL}" />
+	
 	</salesforce:sfdc-config>
 	<import doc:name="Import"
 		doc:id="f7b5646c-2a97-4755-8249-2b1ca0e9171c"
