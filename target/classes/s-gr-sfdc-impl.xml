@@ -68,7 +68,7 @@ payload.payload map (item,index) ->{
 "NomDeNaissance__c": if(!isEmpty(item.NomDeNaissance__c)) item.NomDeNaissance__c else "",
 "DateDeNaissance__c": if(!isEmpty(item.DateDeNaissance__c)) item.DateDeNaissance__c as Date {format: "yyyy-MM-dd"} else "",
 "SituationMatrimoniale__c" : if(!isEmpty(item.SituationMatrimoniale__c)) item.SituationMatrimoniale__c else "",
-"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) item.NombreDEnfantsACharge__c else "",
+"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) (item.NombreDEnfantsACharge__c as String) else "",
 "TypeDeCompte__c" : item.TypeDeCompte__c,
 "PersonHomePhone" : if (!isEmpty(item.PersonHomePhone)) item.PersonHomePhone else "",
 "PersonOtherPhone" : if (!isEmpty(item.PersonOtherPhone)) item.PersonOtherPhone else "",
