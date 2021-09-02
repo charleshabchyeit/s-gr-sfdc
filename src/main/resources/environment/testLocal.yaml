@@ -21,9 +21,6 @@ https:
 config:
   salesforce:
     authorizationURL: "https://test.salesforce.com/services/Soap/u/50.0"
-    //username: "mulesoft.api@garance.fr.lot1real"
-    //password: "${secure::passwords.sfdcPass}"
-    //securityToken: "tKO7vwAyJhyB2QRzU4VOmaQKy"
     username: "mulesoft.api@garance.fr.recette"
     password: "${secure::passwords.sfdcPass}"
     securityToken: "4NHYgGPP2eCmNbVDiU9obI1u"
