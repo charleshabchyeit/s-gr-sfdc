@@ -66,11 +66,11 @@ payload.payload map (item,index) ->{
 "LastName" : if(!isEmpty(item.LastName)) item.LastName else "",
 "Salutation" : if(!isEmpty(item.Salutation)) item.Salutation else "",
 "NomDeNaissance__c": if(!isEmpty(item.NomDeNaissance__c)) item.NomDeNaissance__c else "",
-"PersonBirthdate" : if(!isEmpty(item.PersonBirthdate)) item.PersonBirthdate as Date {format: "yyyy-MM-dd"} else "",
+"DateDeNaissance__c": if(!isEmpty(item.DateDeNaissance__c)) item.DateDeNaissance__c as Date {format: "yyyy-MM-dd"} else "",
 "SituationMatrimoniale__c" : if(!isEmpty(item.SituationMatrimoniale__c)) item.SituationMatrimoniale__c else "",
-"NombreDEnfantsACharge__c" : if(!isEmpty(item.NombreDEnfantsACharge__c)) item.NombreDEnfantsACharge__c else "",
+"NombreDenfants__c" : if(!isEmpty(item.NombreDenfants__c)) (item.NombreDenfants__c as String) else "",
 "TypeDeCompte__c" : item.TypeDeCompte__c,
-"PersonHomePhone" : if (!isEmpty(item.PersonHomePhone)) item.PersonHomePhone else "",
+"Phone" : if (!isEmpty(item.Phone)) item.Phone else "",
 "PersonOtherPhone" : if (!isEmpty(item.PersonOtherPhone)) item.PersonOtherPhone else "",
 "PersonMobilePhone" : if (!isEmpty(item.PersonMobilePhone)) item.PersonMobilePhone else "",
 "DateDeDeces__c" : if (!isEmpty(item.DateDeDeces__c)) item.DateDeDeces__c as Date {format: "yyyy-MM-dd"} else "",
@@ -99,8 +99,9 @@ payload.payload map (item,index) ->{
 "Newsletter__pc" : item.Newsletter__pc,
 "EnqueteClient__pc" : item.EnqueteClient__pc,
 "EnvoiDeContenusAdaptes__pc" : item.EnvoiDeContenusAdaptes__pc,
-("DateDuDernierConsentement__pc": item.DateDuDernierConsentement__pc as LocalDateTime) if(!isEmpty(item.DateDuDernierConsentement__pc)),
-("DerniereSourceDeConsentement__pc": item.DerniereSourceDeConsentement__pc) if(!isEmpty(item.DerniereSourceDeConsentement__pc))
+"DateDuDernierConsentement__pc": if(!isEmpty(item.DateDuDernierConsentement__pc)) (item.DateDuDernierConsentement__pc as LocalDateTime) else "",
+"DerniereSourceDeConsentement__pc": if(!isEmpty(item.DerniereSourceDeConsentement__pc)) (item.DerniereSourceDeConsentement__pc) else "",
+( fieldsToNull: valuesOf(item mapObject (( key: $$ ) if(($ == null) or (isEmpty($)))  )))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -120,12 +121,13 @@ payload map (item,index) ->{
 	"Account":  item.Account,
 	("Produit__c": item.Produit__c) if(!isEmpty(item.Produit__c)),
 	("GammeProduit__c ": item.GammeProduit__c) if(!isEmpty(item.GammeProduit__c)),
-	("GarantiesSouscrites__c": item.GarantiesSouscrites__c) if(!isEmpty(payload."GarantiesSouscrites__c".garantie)),
+	("GarantiesSouscrites__c": item.GarantiesSouscrites__c) if(!isEmpty(item.GarantiesSouscrites__c)),
 	("Source__c": item.Source__c)  if(!isEmpty(item.Source__c)),
 	("Status": item.Status) if(!isEmpty(item.Status)),
-	//"StartDate": item.dateDeDebut as Date {format: "yyyy-MM-dd"},
 	("DateDeffet__c": item.DateDeffet__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeffet__c)),
-	("DateDeFinDuContrat__c": item.DateDeFinDuContrat__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeFinDuContrat__c))
+	("DateDeFinDuContrat__c": item.DateDeFinDuContrat__c as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeFinDuContrat__c)),
+	("StartDate": item.StartDate as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.StartDate)),
+	("fieldsToNull": valuesOf(item mapObject (( key: $$ ) if(($ == null) or (isEmpty($)))  )))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -145,7 +147,8 @@ payload map (item, index) -> {
 ("Montant__c ": item.Montant__c) if(!isEmpty(item.Montant__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
 ("IDPLI__c": item.IDPLI__c as String) if(!isEmpty(item.IDPLI__c)),
-("Status" : item.Status) if(!isEmpty(item.Status))
+("Status" : item.Status) if(!isEmpty(item.Status)),
+("fieldsToNull": valuesOf(item mapObject (( key: $$ ) if(($ == null) or (isEmpty($))) )))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -162,15 +165,16 @@ payload map (item, index) -> {
 ("IDPLI__c": item.IDPLI__c) if(!isEmpty(item.IDPLI__c)),
 ("Account": item.Account) if(!isEmpty(item.Account)),
 ("Contrat__r": item.Contrat__r) if(!isEmpty(item.Contrat__r)),
-//("DomainedActivite__c": item.DomainedActivite__c) if(!isEmpty(item.DomainedActivite__c)),
 "RecordtypeId" : item.RecordtypeId,
 ("MontantEncaissement__c ": item.MontantEncaissement__c) if(!isEmpty(item.MontantEncaissement__c)),
 ("Origin": item.Origin) if(!isEmpty(item.Origin)),
 ("Reason": item.Reason) if(!isEmpty(item.Reason)),
-//("SousMotif__c": item.SousMotif__c) if(!isEmpty(item.SousMotif__c)),
+("SousMotif__c": item.SousMotif__c) if(!isEmpty(item.SousMotif__c)),
 ("TypologieDeDocument__c": item.TypologieDeDocument__c) if(!isEmpty(item.TypologieDeDocument__c)),
-//(Status: item.Status) if (!isEmpty(item.Status)),
-//("ReferenceEncaissement__c": item.ReferenceEncaissement__c) if(!isEmpty(item.ReferenceEncaissement__c))
+(Status: item.Status) if (!isEmpty(item.Status)),
+("ReferenceEncaissement__c": item.ReferenceEncaissement__c) if(!isEmpty(item.ReferenceEncaissement__c)),
+("DomainedActivite__c": item.DomainedActivite__c) if(!isEmpty(item.DomainedActivite__c)),
+("fieldsToNull": valuesOf(item mapObject (( key: $$ ) if(($ == null) or (isEmpty($)))  )))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -185,14 +189,9 @@ payload map (item, index) -> {
 output application/java
 ---
 payload map (item, index) -> {
-	//"LastName": "testLN1",
-	//"FirstName": "testFN",
-	//"PersonEmail": "testMarleine@test.com",
-	//"Salutation": "Mr.",
 	"RecordTypeId": item.RecordTypeId,
 	("NAdherent__c" : item.NAdherent__c) if(!isEmpty(item.NAdherent__c)),
 	("Cible__c" : item.Cible__c) if(!isEmpty(item.Cible__c)),
-	//("DateDeSortie__c" : item.DateDeSortie__c as Date as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDeSortie__c)),
 	("DateDEntree__c" : item.DateDEntree__c as Date as Date {format: "yyyy-MM-dd"}) if(!isEmpty(item.DateDEntree__c)),
 	("Anciennete__c" : item.Anciennete__c) if(!isEmpty(item.Anciennete__c)),
 	("NPSNumerique__c" : item.NPSNumerique__c) if(!isEmpty(item.Cible__c)),
@@ -202,7 +201,8 @@ payload map (item, index) -> {
 	("MultiEquipement__c" : item.MultiEquipement__c) if(!isEmpty(item.MultiEquipement__c)),
 	("NombreDeContrats__c" : item.NombreDeContrats__c) if(!isEmpty(item.NombreDeContrats__c)),
 	("CSPRequalifiee__c" : item.CSPRequalifiee__c) if(!isEmpty(item.CSPRequalifiee__c)),
-	("VersementProgrammeDe2Mois__c" : item.VersementProgrammeDe2Mois__c) if(!isEmpty(item.VersementProgrammeDe2Mois__c))
+	("VersementProgrammeDe2Mois__c" : item.VersementProgrammeDe2Mois__c) if(!isEmpty(item.VersementProgrammeDe2Mois__c)),
+	("fieldsToNull": valuesOf(item mapObject (( key: $$ ) if(($ == null) or (isEmpty($)))  )))
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -248,9 +248,7 @@ payload map (item, index) -> {
 &#10;	"category": vars.logCategory,
 &#10;	"message": vars.logMessage
 &#10;}]' />
-				<file:write doc:name="Write"
-					doc:id="023edc04-677a-4672-a89d-7465295735dd"
-					path="#[vars.objectSfdc]" config-ref="File_Config" mode="APPEND" />
+				<file:write doc:name="Write" doc:id="7dac78b4-80c7-4d9d-a835-89e4dedef5c4" config-ref="File_Config" path="#[vars.objectSfdc]" mode="APPEND" />
 			</when>
 		</choice>
 		<ee:transform doc:name="To Json"

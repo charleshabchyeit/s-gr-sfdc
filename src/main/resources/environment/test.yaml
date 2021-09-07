@@ -1,13 +1,40 @@
+# Environment specific properties
 environment:
- name: "![TYx63+PckT5A0h9oA9gWYQ==]"
-application:
- name: "Mule 4 Template API"
+ name: "test"
+  
 api:
- name: "mule-4-template-api-${secure::environment.name}"
- id: "15688395"
- version: "v1"
- http:
+  name: "${application.name}-${environment.name}"
+  id: "873119"
+  version: "v1"
+
+http:
+  private:
+    port: "8091"
+  timeout: "999999999"
   listener:
-   path: "/api/${api.name}/${api.version}/*"
-   host: "0.0.0.0"
-   port: "8081"
+    path: "/api/${api.name}/${api.version}/*"
+
+https:
+  port: "8092"
+  listener:
+    path: "/api/${api.name}/${api.version}/*"
+
+config:
+  salesforce:
+    authorizationURL: "https://test.salesforce.com/services/Soap/u/50.0"
+    username: "mulesoft.api@garance.fr.recette"
+    password: "${secure::passwords.sfdcPass}"
+    securityToken: "4NHYgGPP2eCmNbVDiU9obI1u"
+    timeout: "900000000"
+    
+# Common properties
+common:
+  audit:
+    role:
+      logStart: "true"
+      logEnd: "true"
+      logInfo: "true"
+      logWarning: "true"
+      logError: "true"
+      logDebug: "true"
+    defaultLogPayloadLogic: "ALWAYS"

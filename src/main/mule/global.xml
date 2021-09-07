@@ -29,6 +29,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 			password="${config.salesforce.password}"
 			securityToken="${config.salesforce.securityToken}"
 			url="${config.salesforce.authorizationURL}" />
+	
 	</salesforce:sfdc-config>
 	<import doc:name="Import"
 		doc:id="f7b5646c-2a97-4755-8249-2b1ca0e9171c"
@@ -45,9 +46,9 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<import doc:name="Import"
 		doc:id="22838dae-af39-40ed-8954-022a103bd2b4"
 		file="common/error/global-error.xml" />
-	<global-property doc:name="Global Property"
+	<global-property doc:name="mule.env"
 		doc:id="96f71df1-6c02-4c6f-8889-5394cdf44964" name="mule.env"
-		value="devLocal" />
+		value="testLocal" />
 	<configuration-properties
 		doc:name="Configuration properties"
 		doc:id="c0bc5f27-1daf-482d-bac4-ccf6e7e19f50"
@@ -81,7 +82,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<file:config name="File_Config" doc:name="File Config"
 		doc:id="836c24bc-ba74-4ba9-83dd-cc477c719f01">
 		<file:connection
-			workingDir="C:\Users\charles.habchy.EITECH\Desktop\GRLogs" />
+			workingDir="C:\Users\nancy.kalach\Desktop\GRLogs" />
 	</file:config>
 <!-- 	<api-gateway:autodiscovery apiId="${api.id}" -->
 <!-- 		ignoreBasePath="true" doc:name="API Autodiscovery" -->
