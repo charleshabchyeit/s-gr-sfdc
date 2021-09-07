@@ -1,10 +1,10 @@
 # Environment specific properties
 environment:
- name: "dev"
+ name: "test"
   
 api:
   name: "${application.name}-${environment.name}"
-  id: "795526"
+  id: "873119"
   version: "v1"
 
 http:
